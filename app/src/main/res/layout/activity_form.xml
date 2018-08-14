@@ -88,14 +88,16 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.8">
+                    android:layout_weight="1.8"
+                    android:orientation="horizontal">
                     <EditText
                         android:id="@+id/et_lain_lain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Tulis Kategori"
-                        android:enabled="false"
-                        android:layout_gravity="bottom"/>
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"/>
+
                 </LinearLayout>
             </LinearLayout>
             <TextView
@@ -107,14 +109,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <SeekBar
-                    android:id="@+id/sb_rating_book_form"
+                    android:id="@+id/sb_jumlah"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:max="20"
+                    android:max="100"
                     android:progress="1"
-                    android:layout_weight="20" />
+                    android:layout_weight="14.48" />
                 <TextView
                     android:id="@+id/tv_seek_value"
                     android:layout_width="0dp"
@@ -126,7 +128,10 @@
             <EditText android:id="@+id/et_color_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Kode Warna (HEX)"/>
+                android:hint="Kode Warna (HEX)"
+                android:clickable="true"
+                android:focusable="false"
+                android:inputType="text"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

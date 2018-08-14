@@ -32,4 +32,5 @@
         <item>Mizan</item>
         <item>Bentang Pustaka</item>
     </string-array>
+    <string name="cp_title">Pilih Kode Warna</string>
 </resources>
