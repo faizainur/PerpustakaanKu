@@ -67,14 +67,16 @@ public class BooksDataSource {
         book.setPenerbit(cursor.getString(4));
         book.setKategori(cursor.getString(5));
         book.setJumlah(cursor.getString(6));
-        book.setKodeWarna(cursor.getString(7));
+        book.setKodeWarna(cursor.getInt(7));
         book.setKualitas(cursor.getString(8));
         book.setRangkuman(cursor.getString(9));
 
         return book;
     }
     public void clearData(){
+        open();
         database.execSQL("DELETE FROM books");
+        close();
     }
 
     public BookModel getBook(long id) {

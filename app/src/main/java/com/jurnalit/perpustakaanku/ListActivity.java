@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,15 +13,35 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.jurnalit.perpustakaanku.Database.BookModel;
+import com.jurnalit.perpustakaanku.Database.BooksDataSource;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListActivity extends AppCompatActivity {
 
+    List<BookModel> booksList = new ArrayList<>();
+    BookAdapter adapter;
     ListView listView;
+
+    BooksDataSource dataSource = new BooksDataSource(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
         listView = findViewById(R.id.lv_books_list);
+    }
+
+    @Override
+    protected void onResume() {
+        booksList = dataSource.getAllData();
+
+        Log.d("Student List", "Book List size" + booksList.size());
+        adapter = new BookAdapter(this, booksList);
+        listView.setAdapter(adapter);
+        super.onResume();
     }
 
     @Override
@@ -41,7 +62,9 @@ public class ListActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.menu_clear_data :
-                Toast.makeText(this, "Clear Button Clicked", Toast.LENGTH_SHORT).show();
+                dataSource.clearData();
+                booksList.clear();
+                adapter.notifyDataSetChanged();
                 break;
         }
         return super.onOptionsItemSelected(item);

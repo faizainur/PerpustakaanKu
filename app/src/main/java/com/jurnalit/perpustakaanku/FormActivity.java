@@ -26,14 +26,13 @@ import com.jaredrummler.android.colorpicker.ColorPickerView;
 import com.jurnalit.perpustakaanku.Database.BookModel;
 import com.jurnalit.perpustakaanku.Database.BooksDataSource;
 
-import java.text.Normalizer;
-import java.util.Date;
+
 
 
 public class FormActivity extends AppCompatActivity implements ColorPickerDialogListener{
 
     private static final int DIALOG_ID = 0;
-
+    int colorVal;
     EditText judulBuku;
     EditText isbn;
     EditText kodeWarna;
@@ -75,7 +74,6 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
         jumlah = findViewById(R.id.tv_seek_value);
 
         sbJumlah.setOnSeekBarChangeListener(jumlahListener);
-        kategoriLain.setEnabled(false);
 
         rbKategoriLain.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -142,7 +140,7 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
         book.setTahunTerbit(tahunTerbit.getSelectedItem().toString());
         book.setPenerbit(penerbit.getSelectedItem().toString());
         book.setRangkuman(rangkuman.getText().toString().trim());
-        book.setKodeWarna(kodeWarna.getText().toString().trim());
+        book.setKodeWarna(colorVal);
         book.setJumlah(jumlah.getText().toString());
 
         float kualitasVal = rbKualitas.getRating();
@@ -179,6 +177,7 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
     @Override
     public void onColorSelected(int dialogId, int color) {
         kodeWarna.setText(Integer.toHexString(color));
+        colorVal = color;
     }
 
     @Override

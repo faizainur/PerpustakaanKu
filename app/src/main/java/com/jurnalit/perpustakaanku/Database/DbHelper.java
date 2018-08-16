@@ -18,7 +18,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "penerbit TEXT," +
                 "kategori TEXT," +
                 "jumlah TEXT," +
-                "kode_warna TEXT," +
+                "kode_warna INTEGER," +
                 "kualitas TEXT," +
                 "rangkuman TEXT)");
     }

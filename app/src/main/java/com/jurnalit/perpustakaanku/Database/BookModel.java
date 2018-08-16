@@ -7,7 +7,7 @@ public class BookModel {
     private String penerbit;
     private String kategori;
     private String jumlah;
-    private String kodeWarna;
+    private Integer kodeWarna;
     private String kualitas;
     private String rangkuman;
 
@@ -69,11 +69,11 @@ public class BookModel {
         this.jumlah = jumlah;
     }
 
-    public String getKodeWarna() {
+    public Integer getKodeWarna() {
         return kodeWarna;
     }
 
-    public void setKodeWarna(String kodeWarna) {
+    public void setKodeWarna(Integer kodeWarna) {
         this.kodeWarna = kodeWarna;
     }
 

@@ -31,9 +31,11 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".FormActivity"
+        <activity
+            android:name=".FormActivity"
             android:label="Add Book"
-            android:parentActivityName=".ListActivity"></activity>
+            android:parentActivityName=".ListActivity" />
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>
