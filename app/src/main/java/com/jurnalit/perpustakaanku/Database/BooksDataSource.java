@@ -11,7 +11,7 @@ import java.util.List;
 public class BooksDataSource {
     DbHelper dbHelper;
     SQLiteDatabase database;
-    BookModel book = new BookModel();
+//    BookModel book = new BookModel();
     public BooksDataSource(Context context) {
         dbHelper = new DbHelper(context);
     }
@@ -44,12 +44,11 @@ public class BooksDataSource {
 
     public List<BookModel> getAllData(){
         open();
-        List<BookModel> books = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * from books", new String[]{});
+        List<BookModel> books = new ArrayList<BookModel>();
+        Cursor cursor = database.rawQuery("SELECT * FROM books", new String[]{});
         cursor.moveToFirst();
-
         while (!cursor.isAfterLast()){
-            book = fetchRow(cursor);
+            BookModel book = fetchRow(cursor);
             books.add(book);
             cursor.moveToNext();
         }
@@ -59,7 +58,7 @@ public class BooksDataSource {
     }
 
     public BookModel fetchRow(Cursor cursor){
-
+        BookModel book = new BookModel();
         book.setId(cursor.getLong(0));
         book.setJudulBuku(cursor.getString(1));
         book.setIsbn(cursor.getString(2));
@@ -84,7 +83,7 @@ public class BooksDataSource {
         Cursor cursor = database.rawQuery("SELECT * FROM books WHERE id=?", new String[]{Long.toString(id)});
         cursor.moveToFirst();
 
-        book = fetchRow(cursor);
+        BookModel book = fetchRow(cursor);
         cursor.close();
         close();
 
@@ -95,5 +94,23 @@ public class BooksDataSource {
         open();
         database.delete("books", "id=?", new String[]{Long.toString(id)});
         close();
+    }
+
+    public List<BookModel> search(String keyword){
+        ArrayList<BookModel> searchResult = new ArrayList<>();
+        String sql = "SELECT * FROM books WHERE judul_buku LIKE ?";
+
+        open();
+        Cursor cursor = database.rawQuery(sql, new String[]{"%" + keyword + "%"});
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()){
+            BookModel book = fetchRow(cursor);
+            searchResult.add(book);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return searchResult;
     }
 }

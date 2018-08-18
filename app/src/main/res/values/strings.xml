@@ -1,36 +1,26 @@
 <resources>
     <string name="app_name">PerpustakaanKu</string>
     <string name="search_hint">Search books...</string>
-    <string-array name="release_year">
-        <item>1995</item>
-        <item>1996</item>
-        <item>1997</item>
-        <item>1998</item>
-        <item>1999</item>
-        <item>2000</item>
-        <item>2001</item>
-        <item>2002</item>
-        <item>2004</item>
-        <item>2005</item>
-        <item>2006</item>
-        <item>2007</item>
-        <item>2008</item>
-        <item>2009</item>
-        <item>2010</item>
-        <item>2011</item>
-        <item>2012</item>
-        <item>2013</item>
-        <item>2014</item>
-        <item>2015</item>
-        <item>2016</item>
-        <item>2017</item>
-        <item>2018</item>
-    </string-array>
     <string-array name="publisher">
+        <item>Pilih Penerbit</item>
         <item>Gramedia</item>
         <item>Elex Media Komputindo</item>
         <item>Mizan</item>
         <item>Bentang Pustaka</item>
     </string-array>
+    <string-array name="tahun">
+        <item>3333</item>
+    </string-array>
     <string name="cp_title">Pilih Kode Warna</string>
+    <string name="dummy_paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Nunc scelerisque et mauris non fringilla. Mauris convallis nulla quis efficitur facilisis.
+        Sed mollis quam hendrerit, interdum tellus ut, scelerisque est.
+        Nullam sit amet libero vitae orci mollis consectetur at a augue.
+        Nam nisi odio, pharetra nec nunc non, sollicitudin dictum ipsum.
+        Vestibulum condimentum mattis nunc, et commodo felis blandit a.
+        In hac habitasse platea dictumst. Mauris in lorem ex. Mauris ac dolor mi.
+        Etiam accumsan lobortis velit in rutrum. Sed non magna tempus, ultrices sem quis, porta augue.
+        Donec turpis metus, cursus nec felis vitae, mattis placerat elit.
+        Nullam vitae metus in enim pulvinar eleifend.
+        Phasellus varius convallis turpis quis auctor. Vestibulum eget tristique quam. </string>
 </resources>

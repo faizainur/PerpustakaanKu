@@ -35,8 +35,8 @@
                 android:id="@+id/spinner_release_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/release_year"
-                android:layout_marginTop="5sp" />
+                android:layout_marginTop="5sp"
+                android:entries="@array/tahun"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

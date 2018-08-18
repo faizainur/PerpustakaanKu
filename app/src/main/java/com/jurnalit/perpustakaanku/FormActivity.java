@@ -8,6 +8,7 @@ import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -26,7 +27,8 @@ import com.jaredrummler.android.colorpicker.ColorPickerView;
 import com.jurnalit.perpustakaanku.Database.BookModel;
 import com.jurnalit.perpustakaanku.Database.BooksDataSource;
 
-
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class FormActivity extends AppCompatActivity implements ColorPickerDialogListener{
@@ -52,11 +54,14 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
     BookModel book = new BookModel();
     String kategori;
     ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
-
+    int thisYear;
+    ArrayList<String> years = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
+
+        thisYear = Calendar.getInstance().get(Calendar.YEAR);
 
         judulBuku = findViewById(R.id.et_book_title);
         isbn = findViewById(R.id.et_isbn);
@@ -74,6 +79,7 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
         jumlah = findViewById(R.id.tv_seek_value);
 
         sbJumlah.setOnSeekBarChangeListener(jumlahListener);
+
 
         rbKategoriLain.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
