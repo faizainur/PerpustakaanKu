@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,10 +26,12 @@ import java.util.List;
 import java.util.Set;
 
 public class BookAdapter extends ArrayAdapter<BookModel> {
+    private Context mcontext;
     private HashMap<Integer, Boolean> mSelection = new HashMap<>();
     RelativeLayout relativeLayout;
     public BookAdapter(@NonNull Context context, @NonNull List<BookModel> objects) {
         super(context, R.layout.adapter_book_list, objects);
+        mcontext = context;
     }
 
     public void setNewSelection(int position, boolean value){
@@ -74,6 +79,11 @@ public class BookAdapter extends ArrayAdapter<BookModel> {
         View kodeWarna = listItemView.findViewById(R.id.view_color_code);
         relativeLayout = listItemView.findViewById(R.id.rl_adapter);
 
+        if (isPositionChecked(position)){
+            relativeLayout.setBackgroundColor(Color.HSVToColor(30, new float[]{248, 99, 56}));
+        } else {
+            relativeLayout.setBackgroundColor(Color.TRANSPARENT);
+        }
 
         BookModel book = getItem(position);
         judulBuku.setText(book.getJudulBuku());

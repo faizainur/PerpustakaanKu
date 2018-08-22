@@ -1,10 +1,9 @@
 package com.jurnalit.perpustakaanku;
 
+
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,20 +12,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
-import com.jaredrummler.android.colorpicker.ColorPickerView;
 import com.jurnalit.perpustakaanku.Database.BookModel;
 import com.jurnalit.perpustakaanku.Database.BooksDataSource;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -52,14 +46,22 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
     Button button;
     BooksDataSource dataSource = new BooksDataSource(this);
     BookModel book = new BookModel();
-    String kategori;
+    String kategori = "";
+    String tahunTerbitSelected;
+    String penerbitSelected;
     ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
     int thisYear;
+    long id;
+    String kualitas;
     ArrayList<String> years = new ArrayList<>();
+    ArrayAdapter adapterTahun;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
+        id = getIntent().getLongExtra("id", 0);
+
+
 
         thisYear = Calendar.getInstance().get(Calendar.YEAR);
 
@@ -79,7 +81,17 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
         jumlah = findViewById(R.id.tv_seek_value);
 
         sbJumlah.setOnSeekBarChangeListener(jumlahListener);
+        thisYear = Calendar.getInstance().get(Calendar.YEAR);
 
+        for(int i = 1900; i <= thisYear; i++){
+            if(i == 1900){
+                years.add("Pilih Tahun Terbit");
+                years.add(Integer.toString(i));
+            }
+            years.add(Integer.toString(i));
+        }
+        adapterTahun = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item , years);
+        tahunTerbit.setAdapter(adapterTahun);
 
         rbKategoriLain.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -104,6 +116,40 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
                         .show(FormActivity.this);
             }
         });
+
+        if (id > 0 ){
+            book = dataSource.getBook(id);
+            judulBuku.setText(book.getJudulBuku());
+            isbn.setText(book.getIsbn());
+            kodeWarna.setText(Integer.toHexString(book.getKodeWarna()));
+            colorVal = book.getKodeWarna();
+            rangkuman.setText(book.getRangkuman());
+
+            String kategoriVal = book.getKategori();
+            switch (kategoriVal){
+                case "Komputer" :
+                    rbKategoriKomputer.setChecked(true);
+                    break;
+                case "Agama" :
+                    rbKategoriAgama.setChecked(true);
+                    break;
+                case "Novel" :
+                    rbKategoriNovel.setChecked(true);
+                    break;
+                default :
+                    rbKategoriLain.setChecked(true);
+                    kategoriLain.setText(kategoriVal);
+            }
+
+            rbKualitas.setRating(Float.parseFloat(book.getKualitas()));
+            sbJumlah.setProgress(Integer.parseInt(book.getJumlah()));
+
+            String yearVal = book.getTahunTerbit();
+            tahunTerbit.setSelection(adapterTahun.getPosition(yearVal));
+            ArrayAdapter<String> bookPublisher = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.publisher));
+            penerbit.setSelection(bookPublisher.getPosition(book.getPenerbit()));
+        }
     }
 
     @Override
@@ -141,19 +187,20 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
     };
 
     private void simpan(){
+        tahunTerbitSelected = tahunTerbit.getSelectedItem().toString();
+        penerbitSelected = penerbit.getSelectedItem().toString();
+
         book.setJudulBuku(judulBuku.getText().toString().trim());
         book.setIsbn(isbn.getText().toString().trim());
-        book.setTahunTerbit(tahunTerbit.getSelectedItem().toString());
-        book.setPenerbit(penerbit.getSelectedItem().toString());
+        book.setTahunTerbit(tahunTerbitSelected);
+        book.setPenerbit(penerbitSelected);
         book.setRangkuman(rangkuman.getText().toString().trim());
         book.setKodeWarna(colorVal);
         book.setJumlah(jumlah.getText().toString());
 
         float kualitasVal = rbKualitas.getRating();
-        String kualitas = Float.toString(kualitasVal);
+        kualitas = Float.toString(kualitasVal);
         book.setKualitas(kualitas);
-
-
 
         if (rbKategoriAgama.isChecked()){
             kategori = "Agama";
@@ -166,19 +213,30 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
         }
         book.setKategori(kategori);
 
-        boolean getSuccess = dataSource.addBook(book);
-        if (getSuccess){
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+        boolean validateSuccessful = validateForm(book);
+        if (validateSuccessful){
+            boolean getSuccess;
+            if (id > 0){
+                getSuccess = dataSource.updateData(book);
+                if (getSuccess){
+                    Toast.makeText(this, "Update data successful", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Unable to update data", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                getSuccess = dataSource.addBook(book);
+                if (getSuccess){
+                    Toast.makeText(this, "Adding data successful", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Unable to add data", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
-    private boolean validateForm(){
 
-
-        return true;
-    }
 
     @Override
     public void onColorSelected(int dialogId, int color) {
@@ -189,5 +247,41 @@ public class FormActivity extends AppCompatActivity implements ColorPickerDialog
     @Override
     public void onDialogDismissed(int dialogId) {
 
+    }
+
+    private boolean validateForm(BookModel bookModel){
+        
+        if (bookModel.getJudulBuku().isEmpty()){
+            judulBuku.setError("This field is required");
+            judulBuku.requestFocus();
+            return false;
+        }
+        if (bookModel.getIsbn().isEmpty()){
+            isbn.setError("This field is required");
+            isbn.requestFocus();
+            return false;
+        }
+        if (tahunTerbitSelected.isEmpty() || tahunTerbitSelected.equals("Pilih Tahun Terbit")){
+            Toast.makeText(this, "All field are required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (penerbitSelected.isEmpty() || penerbitSelected.equals("Pilih Penerbit")){
+            Toast.makeText(this, "Choose the book publisher", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (kategori.isEmpty()){
+            Toast.makeText(this, "Choose the book category", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (bookModel.getJumlah().isEmpty()){
+            jumlah.setError("This field is required");
+            return false;
+        }
+        if (kodeWarna.getText().toString().isEmpty()){
+            kodeWarna.setError("This field is required");
+            kodeWarna.requestFocus();
+            return false;
+        }
+        return true;
     }
 }

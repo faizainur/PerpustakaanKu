@@ -3,10 +3,8 @@ package com.jurnalit.perpustakaanku;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +14,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.jurnalit.perpustakaanku.Database.BookModel;
 import com.jurnalit.perpustakaanku.Database.BooksDataSource;
 import java.util.ArrayList;
@@ -29,35 +27,43 @@ public class ListActivity extends AppCompatActivity {
     ListView listView;
     BooksDataSource dataSource = new BooksDataSource(this);
     MenuItem menuItem;
-    private List<Long> itemIds = new ArrayList<>();
+    FloatingActionButton floatEdit;
+    FloatingActionButton floatClear;
+    private ArrayList<BookModel> selectedItem = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        listView = findViewById(R.id.lv_books_list);
 
+        listView = findViewById(R.id.lv_books_list);
+        floatEdit = findViewById(R.id.floating_item_edit);
+        floatClear = findViewById(R.id.floating_item_clear);
+        floatEdit.setOnClickListener(addFABListener);
+        floatClear.setOnClickListener(clearDataFABListener);
+        
+
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(multiChoiceModeListener);
+        listView.setOnItemClickListener(itemClickListener);
+
+    }
+
+    @Override
+    protected void onResume() {
         if (adapter != null){
             adapter.notifyDataSetChanged();
         }
         getData();
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(multiChoiceModeListener);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                return false;
-            }
-        });
-        listView.setOnItemClickListener(itemClickListener);
+        super.onResume();
     }
-
     private boolean getData(){
+
         booksList.clear();
         booksList.addAll(dataSource.getAllData());
         adapter = new BookAdapter(ListActivity.this, booksList);
         listView.setAdapter(adapter);
+
         return true;
     }
     @Override
@@ -72,19 +78,6 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_add :
-                Intent intent = new Intent(getApplicationContext(), FormActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.menu_clear_data :
-                if (clearData()){
-                    Toast.makeText(ListActivity.this, "Clear data successful", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ListActivity.this, "Unable to clear data", Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -99,7 +92,6 @@ public class ListActivity extends AppCompatActivity {
     };
 
     private AbsListView.MultiChoiceModeListener multiChoiceModeListener = new AbsListView.MultiChoiceModeListener() {
-        private boolean editMenuIsVisibled;
         private int nr;
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
@@ -107,11 +99,13 @@ public class ListActivity extends AppCompatActivity {
             if (checked){
                 nr++;
                 adapter.setNewSelection(position, checked);
-                itemIds.add(id);
+                BookModel bookModel = booksList.get((int)id);
+                selectedItem.add(bookModel);
             } else {
                 nr--;
                 adapter.removeSelection(position);
-                itemIds.remove(itemIds.indexOf(id));
+                BookModel bookModel = booksList.get((int)id);
+                selectedItem.remove(selectedItem.indexOf(bookModel));
             }
 
             if (nr > 1){
@@ -119,7 +113,6 @@ public class ListActivity extends AppCompatActivity {
             } else {
                 mode.getMenu().findItem(R.id.menu_edit).setVisible(true);
             }
-            Log.d("Position", "Item selected position" + itemIds);
             mode.setTitle(nr + " selected");
         }
 
@@ -141,30 +134,19 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
-            int idEditVal = (int)(long)itemIds.get(0);
-            BookModel bookModel = booksList.get(idEditVal);
             switch (item.getItemId()){
                 case R.id.menu_edit :
+                    BookModel bookModel = selectedItem.get(0);
                     Intent intent = new Intent(getApplicationContext(), FormActivity.class);
                     intent.putExtra("id", bookModel.getId());
                     startActivity(intent);
                     mode.finish();
-                    Toast.makeText(ListActivity.this, "Hello", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.menu_remove :
-                    // IN PROGRESS
-//                    for (int i = 0; i < itemIds.size(); i++){
-//                        BookModel book = booksList.get(0);
-//                        removeData(book.getId());
-//                        int idRemoveVal = (int)(long)itemIds.get(i);
-//                        if (i == 0){
-//                            BookModel book = booksList.get(idRemoveVal);
-//                            removeData(book.getId());
-//                        } else if (i >= 1){
-//                            BookModel book = booksList.get(idRemoveVal-idRemoveVal);
-//                            removeData(book.getId());
-//                        }
-//                    }
+                    for (int i = 0; i < selectedItem.size(); i++){
+                        BookModel selectedBook = selectedItem.get(i);
+                        removeData(selectedBook.getId());
+                    }
                     mode.finish();
                     return true;
             }
@@ -189,4 +171,23 @@ public class ListActivity extends AppCompatActivity {
         dataSource.removeBook(id);
         getData();
     }
+
+    private FloatingActionButton.OnClickListener addFABListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), FormActivity.class);
+            startActivity(intent);
+        }
+    };
+
+    private FloatingActionButton.OnClickListener clearDataFABListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (clearData()){
+                Toast.makeText(ListActivity.this, "Clear data successful", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ListActivity.this, "Unable to clear data", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 }

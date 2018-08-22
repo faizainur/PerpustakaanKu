@@ -8,19 +8,6 @@
         <item>Mizan</item>
         <item>Bentang Pustaka</item>
     </string-array>
-    <string-array name="tahun">
-        <item>3333</item>
-    </string-array>
     <string name="cp_title">Pilih Kode Warna</string>
-    <string name="dummy_paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Nunc scelerisque et mauris non fringilla. Mauris convallis nulla quis efficitur facilisis.
-        Sed mollis quam hendrerit, interdum tellus ut, scelerisque est.
-        Nullam sit amet libero vitae orci mollis consectetur at a augue.
-        Nam nisi odio, pharetra nec nunc non, sollicitudin dictum ipsum.
-        Vestibulum condimentum mattis nunc, et commodo felis blandit a.
-        In hac habitasse platea dictumst. Mauris in lorem ex. Mauris ac dolor mi.
-        Etiam accumsan lobortis velit in rutrum. Sed non magna tempus, ultrices sem quis, porta augue.
-        Donec turpis metus, cursus nec felis vitae, mattis placerat elit.
-        Nullam vitae metus in enim pulvinar eleifend.
-        Phasellus varius convallis turpis quis auctor. Vestibulum eget tristique quam. </string>
+    <string name="floating_text">Floating Menu</string>
 </resources>

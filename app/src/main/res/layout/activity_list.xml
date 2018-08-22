@@ -7,8 +7,43 @@
     tools:context=".ListActivity">
 
     <ListView
+        android:id="@+id/lv_books_list"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/floating_menu"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_books_list"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:fab_expandDirection="up"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_addButtonColorPressed="@color/colorPrimary"
+        app:fab_labelsPosition="left"
+        app:fab_addButtonStrokeVisible="true">
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/floating_item_edit"
+            app:fab_title="Add Data"
+            app:fab_size="mini"
+            app:fab_icon="@drawable/ic_menu_add"
+            app:fab_stroke_visible="true"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorPrimary" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/floating_item_clear"
+            app:fab_title="Clear All Data"
+            app:fab_size="mini"
+            app:fab_icon="@drawable/ic_menu_clear"
+            app:fab_stroke_visible="true"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorPrimary" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
+
+
+    <!--</com.getbase.floatingactionbutton.FloatingActionsMenu>-->
 </android.support.constraint.ConstraintLayout>

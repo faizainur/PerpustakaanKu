@@ -261,8 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/img_detail_rangkuman_buku"
                 android:layout_below="@id/tv_detail_label_rangkuman_buku"
-                android:textSize="20dp"
-                android:text="@string/dummy_paragraph"/>
+                android:textSize="20dp" />
         </RelativeLayout>
         <View android:layout_width="match_parent"
             android:layout_height="1dp"

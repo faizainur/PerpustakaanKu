@@ -11,7 +11,6 @@ import java.util.List;
 public class BooksDataSource {
     DbHelper dbHelper;
     SQLiteDatabase database;
-//    BookModel book = new BookModel();
     public BooksDataSource(Context context) {
         dbHelper = new DbHelper(context);
     }
@@ -39,6 +38,24 @@ public class BooksDataSource {
 
         long id = database.insert("books", null, contentValues);
         close();
+        return id > 0;
+    }
+
+    public boolean updateData(BookModel book){
+        open();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("judul_buku", book.getJudulBuku());
+        contentValues.put("isbn", book.getIsbn());
+        contentValues.put("tahun_terbit", book.getTahunTerbit());
+        contentValues.put("penerbit", book.getPenerbit());
+        contentValues.put("kategori", book.getKategori());
+        contentValues.put("jumlah", book.getJumlah());
+        contentValues.put("kode_warna", book.getKodeWarna());
+        contentValues.put("kualitas", book.getKualitas());
+        contentValues.put("rangkuman", book.getRangkuman());
+        long id = database.update("books", contentValues, "id=?", new String[]{Long.toString(book.getId())});
+        close();
+
         return id > 0;
     }
 
